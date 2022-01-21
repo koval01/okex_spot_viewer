@@ -8,6 +8,7 @@ from datetime import timedelta
 import json
 import logging
 import requests_cache
+from requests import get as http_get
 from typing import List
 from pydantic import BaseModel
 
@@ -67,9 +68,6 @@ class ModelData(BaseModel):
 
 class OkxApi:
     def __init__(self) -> None:
-        self.session = requests_cache.CachedSession(
-            name = "OkxApi", backend = "memory", 
-            expire_after = timedelta(seconds=10))
         self.host = "www.okx.com"
         self.path = "priapi/v5/algo/trade/info"
         self.params = {
@@ -81,7 +79,7 @@ class OkxApi:
         }
 
     def __str__(self) -> str:
-        resp = self.session.get(
+        resp = http_get(
             url=f"https://{self.host}/{self.path}",
             params=self.params, headers=self.headers
         ).json()
