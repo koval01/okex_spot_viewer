@@ -102,7 +102,7 @@ class CurrencyGet:
         self.path = "p24api/exchange_rates"
         self.mode = mode
         self.params = {
-            "json": None,
+            "json": "",
             "date": datetime.now().strftime("%d.%m.%Y"),
         }
 
