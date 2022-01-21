@@ -6,7 +6,7 @@ import os
 from time import time
 from datetime import timedelta
 import json
-from requests import get as http_get
+import logging
 import requests_cache
 from typing import List
 from pydantic import BaseModel
@@ -67,6 +67,9 @@ class ModelData(BaseModel):
 
 class OkxApi:
     def __init__(self) -> None:
+        self.session = requests_cache.CachedSession(
+            name = "OkxApi", backend = "memory", 
+            expire_after = timedelta(seconds=10))
         self.host = "www.okx.com"
         self.path = "priapi/v5/algo/trade/info"
         self.params = {
@@ -78,7 +81,7 @@ class OkxApi:
         }
 
     def __str__(self) -> str:
-        resp = http_get(
+        resp = self.session.get(
             url=f"https://{self.host}/{self.path}",
             params=self.params, headers=self.headers
         ).json()
@@ -92,7 +95,8 @@ class OkxApi:
 class CurrencyGet:
     def __init__(self, mode: str = "USD_UAH") -> None:
         self.session = requests_cache.CachedSession(
-            backend = "memory", expire_after = timedelta(minutes=5))
+            name = "CurrencyGet", backend = "memory", 
+            expire_after = timedelta(minutes=5))
         self.host = "free.currconv.com"
         self.path = "api/v7/convert"
         self.mode = mode
@@ -103,10 +107,14 @@ class CurrencyGet:
         }
 
     def __str__(self) -> str:
-        return self.session.get(
-            url=f"https://{self.host}/{self.path}",
-            params=self.params
-        ).json()[self.mode]
+        try:
+            return self.session.get(
+                url=f"https://{self.host}/{self.path}",
+                params=self.params
+            ).json()[self.mode]
+        except Exception as e:
+            logging.error("%s: %s" % (CurrencyGet.__name__, e))
+            return "0"
 
 
 app = Flask(__name__)
@@ -119,7 +127,7 @@ class DataReturn(Resource):
         try:
             loads = json.loads(str(OkxApi()))
             data = ModelData(**loads).data[0]
-            uah_price = CurrencyGet()
+            uah_price = float(CurrencyGet())
             return jsonify({
                 "success": len(loads["data"]) > 0,
                 "data": {
