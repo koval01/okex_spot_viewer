@@ -94,20 +94,41 @@ CORS(app)
 class DataReturn(Resource):
     @staticmethod
     def get() -> jsonify:
-        data = ModelData(**json.loads(str(OkxApi()))).data[0]
-        return jsonify({
-            "data": {
-                "algo_id": OkxApi().short_id(data.algoId),
-                "instance_id": data.instId,
-                "instance_type": data.instType,
-                "order_type": data.ordType,
-                "investment": float(data.investment),
-                "profit": float(data.gridProfit),
-                "trades_num": int(data.tradeNum),
-                "arbitrages_num": int(data.arbitrageNum),
-                "created_at_utc": int(data.cTime),
-            }
-        })
+        try:
+            data = ModelData(**json.loads(str(OkxApi()))).data[0]
+            return jsonify({
+                "success": float(data.gridProfit) > 0 < float(data.floatProfit),
+                "data": {
+                    "algo_id":          OkxApi().short_id(data.algoId),
+                    "annualized_rate":  float(data.annualizedRate),
+                    "investment":       float(data.investment),
+                    "profit":           float(data.gridProfit),
+                    "float_profit":     float(data.floatProfit),
+                    "run-price":        float(data.runPx),
+                    "trades_num":       int(data.tradeNum),
+                    "arbitrages_num":   int(data.arbitrageNum),
+                    "created_at_utc":   int(data.cTime),
+                    "instance_id":      str(data.instId),
+                    "instance_type":    str(data.instType),
+                    "order_type":       str(data.ordType),
+                },
+                "hint": {
+                    "algo_id":          "Номер грида",
+                    "annualized_rate":  "Расчетный годовой доход",
+                    "investment":       "Сумма вклада (Доллар)",
+                    "profit":           "Полученный доход (Доллар)",
+                    "float_profit":     "Текущее состояние грида (Доллар)",
+                    "run-price":        "Курс на момент запуска (Доллар)",
+                    "trades_num":       "Кол-во трейдов",
+                    "arbitrages_num":   "Кол-во арбитражей",
+                    "created_at_utc":   "Дата когда был создан грид",
+                    "instance_id":      "Рынок",
+                    "instance_type":    "Экземпляр",
+                    "order_type":       "Тип дохода",
+                }
+            })
+        except Exception as e:
+            return jsonify({"success": False, "exception": e})
 
 
 api.add_resource(DataReturn, '/')
