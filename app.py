@@ -1,10 +1,9 @@
 from __future__ import annotations
 from flask_cors import CORS
 from flask_restful import Resource, Api
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify
 import os
 from time import time
-from datetime import timedelta
 from datetime import datetime
 import json
 import logging
@@ -95,7 +94,7 @@ class CurrencyGet:
     def __init__(self, mode: str = "USD") -> None:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
-            expire_after = timedelta(minutes=15),
+            expire_after = 300,
             cache_control = True,
         )
         self.host = "api.privatbank.ua"
