@@ -172,7 +172,7 @@ class DataJson(Resource):
                 }
             })
         except Exception as e:
-            return jsonify({"success": False, "exception": e})
+            return jsonify({"success": False, "exception": repr(e)})
 
 
 class DataPage(Resource):
