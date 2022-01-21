@@ -121,6 +121,8 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
 class DataJson(Resource):
     @staticmethod
     def get() -> jsonify:
@@ -177,14 +179,7 @@ class DataJson(Resource):
             return jsonify({"success": False, "exception": str(e)})
 
 
-class DataPage(Resource):
-    @staticmethod
-    def get() -> render_template:
-        return render_template('page.html')
-
-
-api.add_resource(DataPage, '/')
-api.add_resource(DataJson, '/json')
+api.add_resource(DataJson, '/')
 
 if __name__ == "__main__":
     app.run()
