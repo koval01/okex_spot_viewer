@@ -97,7 +97,7 @@ class DataReturn(Resource):
         try:
             data = ModelData(**json.loads(str(OkxApi()))).data[0]
             return jsonify({
-                "success": float(data.gridProfit) > 0.0 < float(data.floatProfit),
+                "success": float(data.gridProfit) > 0 and float(data.floatProfit) > 0,
                 "data": {
                     "algo_id":          OkxApi().short_id(data.algoId),
                     "annualized_rate":  float(data.annualizedRate),
