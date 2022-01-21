@@ -127,7 +127,7 @@ class DataJson(Resource):
         try:
             loads = json.loads(str(OkxApi()))
             data = ModelData(**loads).data[0]
-            uah_price = float(CurrencyGet().__str__)
+            uah_price = float(f"{CurrencyGet()}")
             return jsonify({
                 "success": len(loads["data"]) > 0,
                 "data": {
