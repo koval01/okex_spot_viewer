@@ -108,9 +108,8 @@ class CurrencyGet:
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
             )
-            json_data = resp.json()
             logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
-            return str([el["rate"] for el in json_data if el["cc"] == "USD"][0])
+            return str([el["rate"] for el in resp.json() if el["cc"] == "USD"][0])
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
