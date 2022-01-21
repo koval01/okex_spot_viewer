@@ -1,5 +1,6 @@
 gunicorn
 requests
+requests-cache
 pydantic
 Flask
 flask-restful
