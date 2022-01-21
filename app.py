@@ -109,10 +109,12 @@ class CurrencyGet:
 
     def __str__(self) -> str:
         try:
-            return str(self.session.get(
+            resp = self.session.get(
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
-            ).json()[self.mode])
+            )
+            logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
+            return resp.json()[self.mode]
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
