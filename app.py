@@ -180,7 +180,7 @@ class DataJson(Resource):
 class DataPage(Resource):
     @staticmethod
     def get() -> render_template:
-        return render_template('page.html')
+        return render_template('./page.html')
 
 
 api.add_resource(DataPage, '/')
