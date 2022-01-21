@@ -1,0 +1,6 @@
+gunicorn
+requests
+pydantic
+Flask
+flask-restful
+Flask-Cors
