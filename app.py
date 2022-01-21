@@ -108,10 +108,10 @@ class CurrencyGet:
 
     def __str__(self) -> str:
         try:
-            return self.session.get(
+            return str(self.session.get(
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
-            ).json()[self.mode]
+            ).json()[self.mode])
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
@@ -127,7 +127,7 @@ class DataJson(Resource):
         try:
             loads = json.loads(str(OkxApi()))
             data = ModelData(**loads).data[0]
-            uah_price = float(f"{CurrencyGet()}")
+            uah_price = float(CurrencyGet())
             return jsonify({
                 "success": len(loads["data"]) > 0,
                 "data": {
