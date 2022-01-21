@@ -1,7 +1,7 @@
 from __future__ import annotations
 from flask_cors import CORS
 from flask_restful import Resource, Api
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import os
 from time import time
 from datetime import timedelta
@@ -177,8 +177,8 @@ class DataJson(Resource):
 
 class DataPage(Resource):
     @staticmethod
-    def get() -> jsonify:
-        return jsonify({"page": None})
+    def get() -> render_template:
+        return render_template('page.html')
 
 
 api.add_resource(DataPage, '/')
