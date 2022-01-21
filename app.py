@@ -121,7 +121,7 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-class DataReturn(Resource):
+class DataJson(Resource):
     @staticmethod
     def get() -> jsonify:
         try:
@@ -175,7 +175,14 @@ class DataReturn(Resource):
             return jsonify({"success": False, "exception": e})
 
 
-api.add_resource(DataReturn, '/')
+class DataPage(Resource):
+    @staticmethod
+    def get() -> jsonify:
+        return jsonify({"page": None})
+
+
+api.add_resource(DataPage, '/')
+api.add_resource(DataJson, '/json')
 
 if __name__ == "__main__":
     app.run()
