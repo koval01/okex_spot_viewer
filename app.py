@@ -94,7 +94,10 @@ class CurrencyGet:
     def __init__(self, mode: str = "USD_UAH") -> None:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
-            expire_after = timedelta(minutes=5))
+            expire_after = timedelta(minutes=5),
+            urls_expire_after = timedelta(minutes=5),
+            cache_control = False,
+        )
         self.host = "free.currconv.com"
         self.path = "api/v7/convert"
         self.mode = mode
