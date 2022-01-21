@@ -95,15 +95,12 @@ class CurrencyGet:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
             expire_after = 300,
-            cache_control = True,
+            cache_control = False,
         )
-        self.host = "api.privatbank.ua"
-        self.path = "p24api/exchange_rates"
+        self.host = "bank.gov.ua"
+        self.path = "NBUStatService/v1/statdirectory/exchange"
         self.mode = mode
-        self.params = {
-            "json": "",
-            "date": datetime.now().strftime("%d.%m.%Y"),
-        }
+        self.params = {"json": ""}
 
     def __str__(self) -> str:
         try:
@@ -111,9 +108,9 @@ class CurrencyGet:
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
             )
-            json_data = resp.json()["exchangeRate"][1:]
+            json_data = json.loads("\"data\": %s" % resp.text)
             logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
-            return str([el["purchaseRateNB"] for el in json_data if el["currency"] == "USD"][0])
+            return str([el["rate"] for el in json_data if el["cc"] == "USD"][0])
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
