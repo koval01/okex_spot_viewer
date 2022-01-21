@@ -5,6 +5,7 @@ from flask import Flask, jsonify, render_template
 import os
 from time import time
 from datetime import timedelta
+from datetime import datetime
 import json
 import logging
 import requests_cache
@@ -91,19 +92,18 @@ class OkxApi:
 
 
 class CurrencyGet:
-    def __init__(self, mode: str = "USD_UAH") -> None:
+    def __init__(self, mode: str = "USD") -> None:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
             expire_after = timedelta(minutes=5),
             cache_control = False,
         )
-        self.host = "free.currconv.com"
-        self.path = "api/v7/convert"
+        self.host = "api.privatbank.ua"
+        self.path = "p24api/exchange_rates"
         self.mode = mode
         self.params = {
-            "q": self.mode,
-            "compact": "ultra",
-            "apiKey": os.getenv("CURRENCY_API_KEY"),
+            "json": None,
+            "date": datetime.now().strftime("%d.%m.%Y"),
         }
 
     def __str__(self) -> str:
@@ -112,8 +112,9 @@ class CurrencyGet:
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
             )
+            json_data = resp.json()["exchangeRate"]
             logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
-            return str(resp.json()[self.mode])
+            return str([el["purchaseRateNB"] for el in json_data if el["currency"] == "USD"][0])
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
