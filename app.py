@@ -95,8 +95,8 @@ class CurrencyGet:
     def __init__(self, mode: str = "USD") -> None:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
-            expire_after = timedelta(minutes=5),
-            cache_control = False,
+            expire_after = timedelta(minutes=15),
+            cache_control = True,
         )
         self.host = "api.privatbank.ua"
         self.path = "p24api/exchange_rates"
