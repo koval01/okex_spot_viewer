@@ -4,8 +4,10 @@ from flask_restful import Resource, Api
 from flask import Flask, jsonify
 import os
 from time import time
+from datetime import timedelta
 import json
 from requests import get as http_get
+import requests_cache
 from typing import List
 from pydantic import BaseModel
 
@@ -87,6 +89,26 @@ class OkxApi:
         return f"{'*'*(len(id_)-6)}{id_[-6:]}"
 
 
+class CurrencyGet:
+    def __init__(self, mode: str = "USD_UAH") -> None:
+        self.session = requests_cache.CachedSession(
+            backend = "memory", expire_after = timedelta(minutes=5))
+        self.host = "free.currconv.com"
+        self.path = "api/v7/convert"
+        self.mode = mode
+        self.params = {
+            "q": self.mode,
+            "compact": "ultra",
+            "apiKey": os.getenv("CURRENCY_API_KEY"),
+        }
+
+    def __str__(self) -> str:
+        return self.session.get(
+            url=f"https://{self.host}/{self.path}",
+            params=self.params
+        ).json()[self.mode]
+
+
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
@@ -97,16 +119,22 @@ class DataReturn(Resource):
         try:
             loads = json.loads(str(OkxApi()))
             data = ModelData(**loads).data[0]
+            uah_price = CurrencyGet()
             return jsonify({
                 "success": len(loads["data"]) > 0,
                 "data": {
                     "algo_id":          OkxApi().short_id(data.algoId),
                     "annualized_rate":  float(data.annualizedRate),
                     "investment":       float(data.investment),
+                    "investment_uah":   float(data.investment) * uah_price,
                     "profit":           float(data.gridProfit),
+                    "profit_uah":       float(data.gridProfit) * uah_price,
                     "float_profit":     float(data.floatProfit),
+                    "float_profit_uah": float(data.floatProfit) * uah_price,
                     "total_price":      float(data.totalPnl),
+                    "total_price_uah":  float(data.totalPnl) * uah_price,
                     "run-price":        float(data.runPx),
+                    "run-price_uah":    float(data.runPx) * uah_price,
                     "trades_num":       int(data.tradeNum),
                     "arbitrages_num":   int(data.arbitrageNum),
                     "created_at_utc":   int(data.cTime),
@@ -118,10 +146,15 @@ class DataReturn(Resource):
                     "algo_id":          "Номер грида",
                     "annualized_rate":  "Расчетный годовой доход",
                     "investment":       "Сумма вклада (Доллар)",
+                    "investment_uah":   "Сумма вклада (Гривна)",
                     "profit":           "Полученный доход (Доллар)",
+                    "profit_uah":       "Полученный доход (Гривна)",
                     "float_profit":     "Текущее состояние грида (Доллар)",
+                    "float_profit_uah": "Текущее состояние грида (Гривна)",
                     "total_price":      "Текущая ценность грида (Доллар)",
+                    "total_price_uah":  "Текущая ценность грида (Гривна)",
                     "run-price":        "Курс на момент запуска (Доллар)",
+                    "run-price_uah":    "Курс на момент запуска (Гривна)",
                     "trades_num":       "Кол-во трейдов",
                     "arbitrages_num":   "Кол-во арбитражей",
                     "created_at_utc":   "Дата когда был создан грид",
