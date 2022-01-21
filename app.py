@@ -113,7 +113,7 @@ class CurrencyGet:
                 params=self.params
             )
             logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
-            return resp.json()[self.mode]
+            return str(resp.json()[self.mode])
         except Exception as e:
             logging.error("%s: %s" % (CurrencyGet.__name__, e))
             return "0"
