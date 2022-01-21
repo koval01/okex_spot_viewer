@@ -95,7 +95,6 @@ class CurrencyGet:
         self.session = requests_cache.CachedSession(
             name = "CurrencyGet", backend = "memory", 
             expire_after = timedelta(minutes=5),
-            urls_expire_after = timedelta(minutes=5),
             cache_control = False,
         )
         self.host = "free.currconv.com"
