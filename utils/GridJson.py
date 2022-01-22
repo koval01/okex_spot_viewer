@@ -37,8 +37,6 @@ class GridJson:
             "algo_id": OkxApi().short_id(data.algoId),
             "annualized_rate": round(float(data.annualizedRate), 3),
             "annualized_rate_uah": round(float(data.annualizedRate) * uah_price, 3),
-            "investment": round(float(data.investment), 3),
-            "investment_uah": round(float(data.investment) * uah_price, 3),
             "profit": round(float(data.gridProfit), 3),
             "profit_uah": round(float(data.gridProfit) * uah_price, 3),
             "float_profit": round(float(data.floatProfit), 3),
