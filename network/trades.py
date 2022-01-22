@@ -5,10 +5,10 @@ from time import time
 from requests import get as http_get
 
 
-class OkxApi:
+class TradesGrid:
     def __init__(self) -> None:
         self.host = "www.okx.com"
-        self.path = "priapi/v5/algo/trade/info"
+        self.path = "priapi/v5/algo/grid/trade-list"
         self.params = {
             "t": round(time()),
             "algoId": os.getenv("ALGO_ID")
@@ -25,10 +25,6 @@ class OkxApi:
 
     def __str__(self) -> str:
         return json.dumps(obj=self.request().json(), indent=5)
-
-    @staticmethod
-    def short_id(id_: str) -> str:
-        return f"{'*' * (len(id_) - 6)}{id_[-6:]}"
 
     def get(self) -> dict:
         return self.request().json()

@@ -1,21 +1,29 @@
-import json
-
 from flask import jsonify
 
-from models.grid import ModelData
+from models.grid import Model as ModelGrid
+from models.trades import Model as ModelTrades
 from network.currency import CurrencyGet
 from network.grid import OkxApi
+from network.trades import TradesGrid
 
 
 class GridJson:
     @staticmethod
     def getData() -> jsonify:
         try:
-            loads = json.loads(str(OkxApi()))
-            data = ModelData(**loads).data[0]
             uah_price = CurrencyGet().get()
+            loads = OkxApi().get()
+            loads_trades = TradesGrid().get()
+            data = ModelGrid(**loads).data[0]
+            data_trades = [{
+                "trade_id": int(el.groupId),
+                "trade_time": int(el.tradeTime),
+                "profit": round(float(el.totalPnl), 3),
+                "profit_uah": round(float(el.totalPnl) * uah_price, 3)
+            } for el in ModelTrades(**loads_trades).data]
             return jsonify({
-                "success": len(loads["data"]) > 0,
+                "success": len(loads["data"]) > 0 and len(data_trades) > 0,
+                "trades": data_trades,
                 "data": {
                     "algo_id": OkxApi().short_id(data.algoId),
                     "annualized_rate": round(float(data.annualizedRate), 3),

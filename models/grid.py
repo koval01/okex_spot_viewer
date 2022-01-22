@@ -52,7 +52,7 @@ class Datum(BaseModel):
     uly: str
 
 
-class ModelData(BaseModel):
+class Model(BaseModel):
     code: str
     data: List[Datum]
     msg: str
