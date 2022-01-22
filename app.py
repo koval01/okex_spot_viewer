@@ -8,7 +8,7 @@ from utils.GridJson import GridJson
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET")
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
 
 
@@ -16,7 +16,7 @@ CORS(app)
 def handle_my_custom_event(data):
     return emit(
         "OkxData", GridJson().get(),
-        namespace="/data", broadcast=True
+        namespace="/OkxData", broadcast=True
     )
 
 
