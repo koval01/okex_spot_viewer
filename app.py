@@ -13,7 +13,7 @@ CORS(app)
 class DataJson(Resource):
     @staticmethod
     def get() -> jsonify:
-        return GridJson().getData()
+        return GridJson().get()
 
 
 api.add_resource(DataJson, '/')

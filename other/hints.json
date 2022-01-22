@@ -1,0 +1,23 @@
+{
+  "hint": {
+    "algo_id": "Номер",
+    "annualized_rate": "Розрахунковий річний дохід (USD)",
+    "annualized_rate_uah": "Розрахунковий річний дохід (UAH)",
+    "investment": "Сума депозиту (USD)",
+    "investment_uah": "Сума депозиту (UAH)",
+    "profit": "Отриманий дохід (USD)",
+    "profit_uah": "Отриманий дохід (UAH)",
+    "float_profit": "Поточний стан (USD)",
+    "float_profit_uah": "Поточний стан (UAH)",
+    "total_price": "Ціна гріду (USD)",
+    "total_price_uah": "Ціна гріду (UAH)",
+    "run-price": "Ціна на запуску (USD)",
+    "run-price_uah": "Ціна на запуску (UAH)",
+    "trades_num": "Кількість торгів",
+    "arbitrages_num": "Кількість арбітражів",
+    "created_at_utc": "Дата створення",
+    "instance_id": "Біржа",
+    "instance_type": "Екземпляр",
+    "order_type": "Вид доходу"
+  }
+}
