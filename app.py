@@ -1,10 +1,12 @@
+import os
+
 from flask import Flask
 from flask_socketio import SocketIO, emit
 
 from utils.GridJson import GridJson
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'EAWn3Tbyih4tpyuYCjZ1'
+app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET")
 socketio = SocketIO(app)
 
 
