@@ -4,4 +4,3 @@ requests-cache
 pydantic
 Flask
 flask-socketio
-Flask-Cors
