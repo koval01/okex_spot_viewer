@@ -1,7 +1,8 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_restful import Resource, Api
 
+from network.recaptcha import Recaptcha
 from utils.GridJson import GridJson
 
 app = Flask(__name__)
@@ -12,8 +13,9 @@ CORS(app)
 
 class DataJson(Resource):
     @staticmethod
-    def get() -> jsonify:
-        return GridJson().get()
+    def post() -> jsonify:
+        if Recaptcha(request.get_json()["re_token"]).check_token():
+            return GridJson().get()
 
 
 api.add_resource(DataJson, '/')
