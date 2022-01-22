@@ -3,5 +3,4 @@ requests
 requests-cache
 pydantic
 Flask
-flask-restful
-Flask-Cors
+flask-socketio
