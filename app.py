@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, emit
 
 from utils.GridJson import GridJson
 
@@ -14,7 +14,7 @@ CORS(app)
 
 @socketio.on('data')
 def handleMessage(msg):
-    return send(GridJson().get(), broadcast=True)
+    return emit("data", GridJson().get(), broadcast=True)
 
 
 if __name__ == "__main__":
