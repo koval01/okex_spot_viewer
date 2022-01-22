@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, send
 
 from utils.GridJson import GridJson
 
@@ -12,12 +12,9 @@ socketio = SocketIO(app, cors_allowed_origins="https://okx.koval.page")
 CORS(app)
 
 
-@socketio.on('OkxData')
-def handle_my_custom_event(data):
-    return emit(
-        "OkxData", GridJson().get(),
-        namespace="/OkxData", broadcast=True
-    )
+@socketio.on('data')
+def handleMessage(msg):
+    return send(GridJson().get(), broadcast=True)
 
 
 if __name__ == "__main__":
