@@ -16,7 +16,6 @@ class GridJson:
             loads_trades = TradesGrid().get()
             data = ModelGrid(**loads).data[0]
             data_trades = [{
-                "trade_id": int(el.groupId),
                 "trade_time": int(el.tradeTime),
                 "profit": round(float(el.totalPnl), 3),
                 "profit_uah": round(float(el.totalPnl) * uah_price, 3)

@@ -5,9 +5,9 @@ from flask_restful import Resource, Api
 from utils.GridJson import GridJson
 
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 api = Api(app)
 CORS(app)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 
 class DataJson(Resource):
