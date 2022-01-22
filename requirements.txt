@@ -1,4 +1,5 @@
 gunicorn
+eventlet
 requests
 requests-cache
 pydantic
