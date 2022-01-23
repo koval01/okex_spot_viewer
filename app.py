@@ -1,26 +1,48 @@
 import os
+from threading import Lock
 
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
 from utils.GridJson import GridJson
 
+async_mode = None
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET")
-socketio = SocketIO(app, cors_allowed_origins="https://okx.koval.page")
 CORS(app)
+socketio = SocketIO(
+    app, async_mode=async_mode,
+    cors_allowed_origins="https://okx.koval.page"
+)
+thread = None
+thread_lock = Lock()
 
 
-@socketio.on("connect")
-def connection_(msg) -> emit:
-    return emit("connect", {"body": "connected"})
+def background_thread():
+    count = 0
+    while True:
+        socketio.sleep(3)
+        count += 1
+        socketio.emit('message', {"data": GridJson().get(), "count": count})
 
 
-@socketio.on("message")
-def handleMessage(msg) -> emit:
-    return emit("message", GridJson().get(), broadcast=True)
+@socketio.event
+def my_event(message):
+    session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('message',
+         {'data': message['data'], 'count': session['receive_count']})
 
 
-if __name__ == "__main__":
+@socketio.event
+def connect():
+    global thread
+    with thread_lock:
+        if thread is None:
+            thread = socketio.start_background_task(background_thread)
+    emit('message', {'data': 'Connected', 'count': 0})
+
+
+if __name__ == '__main__':
     socketio.run(app)
