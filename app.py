@@ -41,7 +41,7 @@ def connect():
     with thread_lock:
         if thread is None:
             thread = socketio.start_background_task(background_thread)
-    emit("message", {"data": "Connected", "count": 0})
+    emit("connect", {"data": "Connected", "count": 0})
 
 
 if __name__ == "__main__":
