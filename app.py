@@ -29,7 +29,7 @@ def background_thread():
 
 
 @socketio.event
-def my_event(message):
+def data_event(message):
     session["receive_count"] = session.get("receive_count", 0) + 1
     emit("message",
          {"data": message["data"], "count": session["receive_count"]})
