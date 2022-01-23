@@ -10,7 +10,7 @@ from utils.GridJson import GridJson
 async_mode = None
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET")
+app.config["SECRET_KEY"] = os.getenv("SOCKET_SECRET")
 CORS(app)
 socketio = SocketIO(
     app, async_mode=async_mode,
@@ -25,14 +25,14 @@ def background_thread():
     while True:
         socketio.sleep(3)
         count += 1
-        socketio.emit('message', {"data": GridJson().get(), "count": count})
+        socketio.emit("message", {"data": GridJson().get(), "count": count})
 
 
 @socketio.event
 def my_event(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('message',
-         {'data': message['data'], 'count': session['receive_count']})
+    session["receive_count"] = session.get("receive_count", 0) + 1
+    emit("message",
+         {"data": message["data"], "count": session["receive_count"]})
 
 
 @socketio.event
@@ -41,8 +41,8 @@ def connect():
     with thread_lock:
         if thread is None:
             thread = socketio.start_background_task(background_thread)
-    emit('message', {'data': 'Connected', 'count': 0})
+    emit("message", {"data": "Connected", "count": 0})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     socketio.run(app)
