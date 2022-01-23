@@ -14,12 +14,12 @@ CORS(app)
 
 @socketio.on('connect')
 def connection_(msg):
-    send({"body": "connected"})
+    return send({"body": "connected"})
 
 
 @socketio.on('message')
 def handleMessage(msg):
-    send(GridJson().get(), broadcast=True)
+    return send(GridJson().get(), broadcast=True)
 
 
 if __name__ == "__main__":
