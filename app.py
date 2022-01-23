@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, emit
 
 from utils.GridJson import GridJson
 
@@ -12,14 +12,14 @@ socketio = SocketIO(app, cors_allowed_origins="https://okx.koval.page")
 CORS(app)
 
 
-@socketio.on('connect')
-def connection_(msg):
-    return send({"body": "connected"})
+@socketio.on("connect")
+def connection_(msg) -> emit:
+    return emit("connect", {"body": "connected"})
 
 
-@socketio.on('message')
-def handleMessage(msg):
-    return send(GridJson().get(), broadcast=True)
+@socketio.on("message")
+def handleMessage(msg) -> emit:
+    return emit("message", GridJson().get(), broadcast=True)
 
 
 if __name__ == "__main__":
