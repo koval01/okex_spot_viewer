@@ -1,9 +1,11 @@
 import json
 import os
 
+from models.exchange import Model as ExchangeModel
 from models.grid import Model as ModelGrid
 from models.trades import Model as ModelTrades
 from network.currency import CurrencyGet
+from network.exchange import ExchangeData
 from network.grid import OkxApi
 from network.trades import TradesGrid
 
@@ -31,12 +33,15 @@ class GridJson:
     def build_grid_data(self) -> dict:
         data = ModelGrid(**self.grid_data).data[0]
         uah_price = self.uah_price
+        currency = ExchangeModel(**ExchangeData(data.instId).get()).data[0]
         return {
             "algo_id": OkxApi().short_id(data.algoId),
             "annualized_rate": round(float(data.annualizedRate), 3),
             "annualized_rate_uah": round(float(data.annualizedRate) * uah_price, 3),
             "profit": round(float(data.gridProfit), 3),
             "profit_uah": round(float(data.gridProfit) * uah_price, 3),
+            "current_price": round(float(currency.last), 3),
+            "current_price_uah": round(float(currency.last) * uah_price, 3),
             "float_profit": round(float(data.floatProfit), 3),
             "float_profit_uah": round(float(data.floatProfit) * uah_price, 3),
             "total_price": round(float(data.totalPnl), 3),

@@ -5,6 +5,8 @@
     "annualized_rate_uah": "Розрахунковий річний дохід (UAH)",
     "investment": "Сума депозиту (USD)",
     "investment_uah": "Сума депозиту (UAH)",
+    "current_price": "Поточна ціна (USD)",
+    "current_price_uah": "Поточна ціна (UAH)",
     "profit": "Отриманий дохід (USD)",
     "profit_uah": "Отриманий дохід (UAH)",
     "float_profit": "Поточний стан (USD)",
