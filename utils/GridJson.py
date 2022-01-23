@@ -1,8 +1,6 @@
 import json
 import os
 
-from flask import jsonify
-
 from models.grid import Model as ModelGrid
 from models.trades import Model as ModelTrades
 from network.currency import CurrencyGet
@@ -53,15 +51,15 @@ class GridJson:
             "order_type": str(data.ordType),
         }
 
-    def get(self) -> jsonify:
+    def get(self) -> dict:
         try:
             data_trades = self.build_trades_data()
             data_grid = self.build_grid_data()
-            return jsonify({
+            return {
                 "success": len(self.grid_data["data"]) > 0 and len(data_trades) > 0,
                 "trades": data_trades,
                 "data": data_grid,
                 "hint": self.hints
-            })
+            }
         except Exception as e:
-            return jsonify({"success": False, "exception": str(e)})
+            return {"success": False, "exception": str(e)}
