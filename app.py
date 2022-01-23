@@ -19,7 +19,7 @@ def connection_(msg):
 
 @socketio.on('message')
 def handleMessage(msg):
-    return emit("data", GridJson().get(), broadcast=True)
+    return emit("message", GridJson().get(), broadcast=True)
 
 
 if __name__ == "__main__":
