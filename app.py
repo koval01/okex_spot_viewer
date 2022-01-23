@@ -23,7 +23,7 @@ thread_lock = Lock()
 def background_thread():
     count = 0
     while True:
-        socketio.sleep(3)
+        socketio.sleep(1)
         count += 1
         socketio.emit("message", {"data": GridJson().get(), "count": count})
 
