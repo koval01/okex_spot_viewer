@@ -12,7 +12,12 @@ socketio = SocketIO(app, cors_allowed_origins="https://okx.koval.page")
 CORS(app)
 
 
-@socketio.on('data')
+@socketio.on('connect')
+def connection_(msg):
+    emit('connection', {'data': 'Connected'})
+
+
+@socketio.on('message')
 def handleMessage(msg):
     return emit("data", GridJson().get(), broadcast=True)
 
