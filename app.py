@@ -14,7 +14,7 @@ app.config["SECRET_KEY"] = os.getenv("SOCKET_SECRET")
 CORS(app)
 socketio = SocketIO(
     app, async_mode=async_mode,
-    cors_allowed_origins="https://okx.koval.page"
+    cors_allowed_origins=os.getenv("ORIGIN")
 )
 thread = None
 thread_lock = Lock()
