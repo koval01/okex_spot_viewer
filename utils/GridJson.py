@@ -16,7 +16,7 @@ class GridJson:
             os.path.dirname(os.path.abspath(__file__)) + '/../other/hints.json', "r"
         ).read())["hint"]
         self.currency = {
-            "uah_price": CurrencyGet().get()
+            "uah": CurrencyGet().get()
         }
         self.trades_data = TradesGrid().get()
         self.grid_data = OkxApi().get()
