@@ -1,6 +1,7 @@
 import logging
 import os
 from threading import Lock
+from time import time
 
 from flask import Flask, session
 from flask_cors import CORS
@@ -25,13 +26,16 @@ def background_thread():
     count = 0
     while True:
         socketio.sleep(1)
+        time_ = time()
         count += 1
         try:
             data = GridJson().get()
         except Exception as e:
             logging.error("Data get error: %s" % e)
             data = None
-        socketio.emit("message", {"data": data, "count": count})
+        socketio.emit("message", {
+            "data": data, "count": count, "process_time": time() - time_
+        })
 
 
 @socketio.event
