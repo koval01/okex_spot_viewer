@@ -18,6 +18,7 @@
     "trades_num": "Кількість торгів",
     "arbitrages_num": "Кількість арбітражів",
     "created_at_utc": "Дата створення",
+    "was_launched": "Було запущено",
     "instance_id": "Біржа",
     "instance_type": "Екземпляр",
     "order_type": "Вид доходу"

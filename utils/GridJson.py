@@ -51,6 +51,7 @@ class GridJson:
             "trades_num": int(data.tradeNum),
             "arbitrages_num": int(data.arbitrageNum),
             "created_at_utc": int(data.cTime),
+            "was_launched": int(data.cTime),
             "instance_id": str(data.instId),
             "instance_type": str(data.instType),
             "order_type": str(data.ordType),
