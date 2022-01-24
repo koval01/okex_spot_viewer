@@ -34,7 +34,7 @@ def background_thread():
             logging.error("Data get error: %s" % e)
             data = None
         socketio.emit("message", {
-            "data": data, "count": count, "process_time": time() - time_
+            "data": data, "count": count, "process_time": round(time() - time_, 3)
         })
 
 
