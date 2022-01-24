@@ -1,3 +1,4 @@
+import logging
 import os
 from threading import Lock
 
@@ -25,7 +26,12 @@ def background_thread():
     while True:
         socketio.sleep(1)
         count += 1
-        socketio.emit("message", {"data": GridJson().get(), "count": count})
+        try:
+            data = GridJson().get()
+        except Exception as e:
+            logging.error("Data get error: %s" % e)
+            data = None
+        socketio.emit("message", {"data": data, "count": count})
 
 
 @socketio.event
