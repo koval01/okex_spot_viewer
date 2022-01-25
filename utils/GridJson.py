@@ -17,8 +17,9 @@ class GridJson:
         ).read())["hint"]
         self.currency = {
             "uah": CurrencyGet().get(),
-            "rub": 78.81,
-            "eur": 0.88,
+            "rub": CurrencyGet("RUB").get(),
+            "eur": CurrencyGet("EUR").get(),
+            "pln": CurrencyGet("PLN").get()
         }
         self.trades_data = TradesGrid().get()
         self.grid_data = OkxApi().get()

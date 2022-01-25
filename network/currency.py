@@ -15,14 +15,28 @@ class CurrencyGet:
         self.mode = mode
         self.params = {"json": ""}
 
-    def get(self) -> float:
+    def request(self) -> dict or None:
         try:
             resp = self.session.get(
                 url=f"https://{self.host}/{self.path}",
                 params=self.params
             )
             logging.info("%s status code: %d" % (CurrencyGet.__name__, resp.status_code))
-            return [el["rate"] for el in resp.json() if el["cc"] == self.mode][0]
+            return resp.json()
         except Exception as e:
-            logging.error("%s: %s" % (CurrencyGet.__name__, e))
+            logging.error("%s.%s: %s" % (CurrencyGet.__name__, self.request.__name__, e))
+
+    def get_currency(self, currency: str = "USD") -> float:
+        try:
+            return [el["rate"] for el in self.request() if el["cc"] == currency][0]
+        except Exception as e:
+            logging.error("%s.%s: %s" % (CurrencyGet.__name__, self.get_currency.__name__, e))
             return 0.0
+
+    def other_currency(self, currency: str = "EUR") -> float:
+        return self.get_currency() / self.get_currency(currency)
+
+    def get(self) -> float:
+        if self.mode == "USD":
+            return self.get_currency()
+        return self.other_currency(self.mode)
