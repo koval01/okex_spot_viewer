@@ -1,6 +1,3 @@
-import json
-import os
-
 from models.exchange import Model as ExchangeModel
 from models.grid import Model as ModelGrid
 from models.trades import Model as ModelTrades
@@ -12,9 +9,6 @@ from network.trades import TradesGrid
 
 class GridJson:
     def __init__(self) -> None:
-        self.hints = json.loads(open(
-            os.path.dirname(os.path.abspath(__file__)) + '/../other/hints.json', "r"
-        ).read())["hint"]
         self.currency = {
             "uah": CurrencyGet().get(),
             "rub": CurrencyGet("RUB").get(),
@@ -62,7 +56,6 @@ class GridJson:
                 "success": len(self.grid_data["data"]) > 0 and len(data_trades) > 0,
                 "trades": data_trades,
                 "data": data_grid,
-                "hint": self.hints,
                 "currency": self.currency,
             }
         except Exception as e:
