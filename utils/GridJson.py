@@ -1,9 +1,11 @@
 from models.exchange import Model as ExchangeModel
 from models.grid import Model as ModelGrid
+from models.profit import Model as ModelProfit
 from models.trades import Model as ModelTrades
 from network.currency import CurrencyGet
 from network.exchange import ExchangeData
 from network.grid import OkxApi
+from network.profit import Profit
 from network.trades import TradesGrid
 
 
@@ -17,6 +19,7 @@ class GridJson:
         }
         self.trades_data = TradesGrid().get()
         self.grid_data = OkxApi().get()
+        self.profit_data = Profit().get()
 
     @staticmethod
     def rounder(value: str) -> float:
@@ -27,6 +30,13 @@ class GridJson:
             "trade_time": int(el.tradeTime),
             "profit": self.rounder(el.totalPnl),
         } for el in ModelTrades(**self.trades_data).data]
+
+    def build_profit_history(self) -> list:
+        return [{
+            "time": int(el.cTime),
+            "ratio": self.rounder(el.pnlRatio),
+            "position": self.rounder(el.totalPnl)
+        } for el in ModelProfit(**self.profit_data).data]
 
     def build_grid_data(self) -> dict:
         data = ModelGrid(**self.grid_data).data[0]
@@ -57,6 +67,7 @@ class GridJson:
                 "trades": data_trades,
                 "data": data_grid,
                 "currency": self.currency,
+                "profit": self.build_profit_history()
             }
         except Exception as e:
             return {"success": False, "exception": type(e)}
