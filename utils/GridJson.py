@@ -19,13 +19,13 @@ class GridJson:
         self.grid_data = OkxApi().get()
 
     @staticmethod
-    def data_round(value: str) -> float:
+    def rounder(value: str) -> float:
         return round(float(value), 3)
 
     def build_trades_data(self) -> list:
         return [{
             "trade_time": int(el.tradeTime),
-            "profit": self.data_round(el.totalPnl),
+            "profit": self.rounder(el.totalPnl),
         } for el in ModelTrades(**self.trades_data).data]
 
     def build_grid_data(self) -> dict:
@@ -33,12 +33,12 @@ class GridJson:
         currency = ExchangeModel(**ExchangeData(data.instId).get()).data[0]
         return {
             "algo_id": OkxApi().short_id(data.algoId),
-            "annualized_rate": round(float(data.annualizedRate), 3),
-            "profit": round(float(data.gridProfit), 3),
-            "current_price": round(float(currency.last), 3),
-            "float_profit": round(float(data.floatProfit), 3),
-            "total_price": round(float(data.totalPnl), 3),
-            "run-price": round(float(data.runPx), 3),
+            "annualized_rate": self.rounder(data.annualizedRate),
+            "profit": self.rounder(data.gridProfit),
+            "current_price": self.rounder(currency.last),
+            "float_profit": self.rounder(data.floatProfit),
+            "total_price": self.rounder(data.totalPnl),
+            "run-price": self.rounder(data.runPx),
             "trades_num": int(data.tradeNum),
             "arbitrages_num": int(data.arbitrageNum),
             "created_at_utc": int(data.cTime),
@@ -59,4 +59,4 @@ class GridJson:
                 "currency": self.currency,
             }
         except Exception as e:
-            return {"success": False, "exception": str(e)}
+            return {"success": False, "exception": type(e)}
