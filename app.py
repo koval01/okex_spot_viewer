@@ -3,7 +3,7 @@ import os
 from threading import Lock
 from time import time
 
-from flask import Flask, session
+from flask import Flask, session, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
@@ -52,6 +52,15 @@ def connect():
         if thread is None:
             thread = socketio.start_background_task(background_thread)
     emit("connect", {"data": "Connected", "count": 0})
+
+
+@app.route("/profit")
+def get() -> jsonify:
+    try:
+        data = GridJson().build_profit_history()
+        return jsonify({"success": len(data) != 0, "data": data})
+    except Exception as e:
+        return jsonify({"success": False, "exception": type(e).__name__})
 
 
 if __name__ == "__main__":

@@ -19,7 +19,6 @@ class GridJson:
         }
         self.trades_data = TradesGrid().get()
         self.grid_data = OkxApi().get()
-        self.profit_data = Profit().get()
 
     @staticmethod
     def rounder(value: str) -> float:
@@ -31,12 +30,13 @@ class GridJson:
             "profit": self.rounder(el.totalPnl),
         } for el in ModelTrades(**self.trades_data).data]
 
-    def build_profit_history(self) -> list:
+    @staticmethod
+    def build_profit_history() -> list:
         return [{
             "time": int(el.cTime),
-            "ratio": self.rounder(el.pnlRatio),
-            "position": self.rounder(el.totalPnl)
-        } for el in ModelProfit(**self.profit_data).data]
+            "ratio": GridJson.rounder(el.pnlRatio),
+            "position": GridJson.rounder(el.totalPnl)
+        } for el in ModelProfit(**Profit().get()).data]
 
     def build_grid_data(self) -> dict:
         data = ModelGrid(**self.grid_data).data[0]
@@ -66,8 +66,7 @@ class GridJson:
                 "success": len(self.grid_data["data"]) > 0 and len(data_trades) > 0,
                 "trades": data_trades,
                 "data": data_grid,
-                "currency": self.currency,
-                "profit": self.build_profit_history()
+                "currency": self.currency
             }
         except Exception as e:
-            return {"success": False, "exception": type(e)}
+            return {"success": False, "exception": type(e).__name__}
