@@ -8,7 +8,7 @@ from requests import get as http_get
 class Profit:
     def __init__(self) -> None:
         self.host = "www.okx.com"
-        self.path = "priapi/v5/algo/grid/trade-list"
+        self.path = "priapi/v5/algo/grid/profit-list"
         self.params = {
             "t": round(time()),
             "algoId": os.getenv("ALGO_ID")
