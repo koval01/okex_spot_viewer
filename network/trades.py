@@ -6,12 +6,12 @@ from requests import get as http_get
 
 
 class TradesGrid:
-    def __init__(self) -> None:
+    def __init__(self, index: int = 0) -> None:
         self.host = "www.okx.com"
         self.path = "priapi/v5/algo/grid/trade-list"
         self.params = {
             "t": round(time()),
-            "algoId": os.getenv("ALGO_ID")
+            "algoId": os.getenv("ALGO_ID").split()[index]
         }
         self.headers = {
             "Authorization": os.getenv("AUTH_KEY")

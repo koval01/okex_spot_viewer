@@ -10,15 +10,16 @@ from network.trades import TradesGrid
 
 
 class GridJson:
-    def __init__(self) -> None:
+    def __init__(self, index: int = 0) -> None:
         self.currency = {
             "uah": CurrencyGet().get(),
             "rub": CurrencyGet("RUB").get(),
             "eur": CurrencyGet("EUR").get(),
             "pln": CurrencyGet("PLN").get()
         }
-        self.trades_data = TradesGrid().get()
-        self.grid_data = OkxApi().get()
+        self.index = index
+        self.trades_data = TradesGrid(index).get()
+        self.grid_data = OkxApi(index).get()
 
     @staticmethod
     def rounder(value: str) -> float:
@@ -30,13 +31,12 @@ class GridJson:
             "profit": self.rounder(el.totalPnl),
         } for el in ModelTrades(**self.trades_data).data]
 
-    @staticmethod
-    def build_profit_history() -> list:
+    def build_profit_history(self) -> list:
         return [{
             "time": int(el.cTime),
             "ratio": GridJson.rounder(el.pnlRatio),
             "position": GridJson.rounder(el.totalPnl)
-        } for el in ModelProfit(**Profit().get()).data]
+        } for el in ModelProfit(**Profit(self.index).get()).data]
 
     def build_grid_data(self) -> dict:
         data = ModelGrid(**self.grid_data).data[0]
