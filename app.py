@@ -30,14 +30,16 @@ def background_thread():
         time_ = time()
         count += 1
         try:
+            data = [GridJson(i).get() for i, _ in enumerate(os.getenv("ALGO_ID").split())]
             data = {
-                "spot": [GridJson(i).get() for i, _ in enumerate(os.getenv("ALGO_ID").split())],
+                "spot": data,
                 "currency": {
                     "uah": CurrencyGet().get(),
                     "rub": CurrencyGet("RUB").get(),
                     "eur": CurrencyGet("EUR").get(),
                     "pln": CurrencyGet("PLN").get()
-                }
+                },
+                "buttons_ids": len(data)
             }
         except Exception as e:
             logging.error("Data get error: %s" % e)
