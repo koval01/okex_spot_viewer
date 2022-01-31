@@ -26,7 +26,6 @@ thread_lock = Lock()
 def background_thread():
     count = 0
     while True:
-        socketio.sleep(1)
         time_ = time()
         count += 1
         try:
