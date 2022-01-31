@@ -7,6 +7,7 @@ from flask import Flask, session, jsonify, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
+from network.currency import CurrencyGet
 from utils.GridJson import GridJson
 
 async_mode = None
@@ -29,7 +30,15 @@ def background_thread():
         time_ = time()
         count += 1
         try:
-            data = [GridJson(i).get() for i, _ in enumerate(os.getenv("ALGO_ID").split())]
+            data = {
+                "spot": [GridJson(i).get() for i, _ in enumerate(os.getenv("ALGO_ID").split())],
+                "currency": {
+                    "uah": CurrencyGet().get(),
+                    "rub": CurrencyGet("RUB").get(),
+                    "eur": CurrencyGet("EUR").get(),
+                    "pln": CurrencyGet("PLN").get()
+                }
+            }
         except Exception as e:
             logging.error("Data get error: %s" % e)
             data = None

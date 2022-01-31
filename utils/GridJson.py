@@ -2,7 +2,6 @@ from models.exchange import Model as ExchangeModel
 from models.grid import Model as ModelGrid
 from models.profit import Model as ModelProfit
 from models.trades import Model as ModelTrades
-from network.currency import CurrencyGet
 from network.exchange import ExchangeData
 from network.grid import OkxApi
 from network.profit import Profit
@@ -11,12 +10,6 @@ from network.trades import TradesGrid
 
 class GridJson:
     def __init__(self, index: int = 0) -> None:
-        self.currency = {
-            "uah": CurrencyGet().get(),
-            "rub": CurrencyGet("RUB").get(),
-            "eur": CurrencyGet("EUR").get(),
-            "pln": CurrencyGet("PLN").get()
-        }
         self.index = index
         self.trades_data = TradesGrid(index).get()
         self.grid_data = OkxApi(index).get()
@@ -65,8 +58,7 @@ class GridJson:
             return {
                 "success": len(self.grid_data["data"]) > 0 and len(data_trades) > 0,
                 "trades": data_trades,
-                "data": data_grid,
-                "currency": self.currency
+                "data": data_grid
             }
         except Exception as e:
             return {"success": False, "exception": type(e).__name__}
